@@ -61,3 +61,22 @@ def register():
 
     return render_template('register.html')
 
+@app.route('/admin_dashboard')
+def admin_dashboard():
+    if 'user_id' not in session or session['user_type'] != 'administration':
+        return redirect(url_for('login'))
+
+    users = User.query.filter_by(user_type='student').all()
+    return render_template('admin_dashboard.html', users=users)
+
+@app.route('/approve_report/<int:report_id>')
+def approve_report(report_id):
+    if 'user_id' not in session or session['user_type'] != 'medical_officer':
+        return redirect(url_for('login'))
+
+    report = MedicalReport.query.get(report_id)
+    report.status = 'Approved'
+    db.session.commit()
+    flash('Report approved', 'success')
+    return redirect(url_for('medical_officer_dashboard'))
+
