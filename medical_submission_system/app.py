@@ -124,6 +124,24 @@ def medical_officer_dashboard():
 
     reports = MedicalReport.query.all()
     return render_template('medical_officer_dashboard.html', reports=reports)
+@app.route('/view_leaves/<int:student_id>')
+def view_leaves(student_id):
+    if 'user_id' not in session or session['user_type'] != 'administration':
+        return redirect(url_for('login'))
+
+    reports = MedicalReport.query.filter_by(student_id=student_id).all()
+    return render_template('view_leaves.html', reports=reports)
+
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    session.pop('user_type', None)
+    return redirect(url_for('login'))
+
+if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True)
 
 
 
