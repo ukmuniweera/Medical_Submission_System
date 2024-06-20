@@ -12,7 +12,8 @@ def student_dashboard():
         db.session.commit()
         flash('Medical report submitted', 'success')
 
-    return render_template('student_dashboard.html'
+    return render_template('student_dashboard.html')
+                           
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
