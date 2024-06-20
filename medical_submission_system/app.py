@@ -1,3 +1,19 @@
+@app.route('/student_dashboard', methods=['GET', 'POST'])
+def student_dashboard():
+    if 'user_id' not in session or session['user_type'] != 'student':
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        start_date = datetime.strptime(request.form['start_date'], '%Y-%m-%d').date()
+        end_date = datetime.strptime(request.form['end_date'], '%Y-%m-%d').date()
+        report = request.form['report']
+        new_report = MedicalReport(student_id=session['user_id'], start_date=start_date, end_date=end_date, report=report)
+        db.session.add(new_report)
+        db.session.commit()
+        flash('Medical report submitted', 'success')
+
+    return render_template('student_dashboard.html'
+
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
