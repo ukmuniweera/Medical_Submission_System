@@ -117,6 +117,14 @@ def login():
             flash('Invalid email or password', 'error')
 
     return render_template('login.html')
+@app.route('/medical_officer_dashboard')
+def medical_officer_dashboard():
+    if 'user_id' not in session or session['user_type'] != 'medical_officer':
+        return redirect(url_for('login'))
+
+    reports = MedicalReport.query.all()
+    return render_template('medical_officer_dashboard.html', reports=reports)
+
 
 
 
