@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='University-of-Vavuniya-Logo-1024x1024.png') }}" type="image/png">
+</head>
+<body>
+    <h2>Student Dashboard</h2>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="notification {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <form method="post">
+        <div class="form-row">
+            <div class="input-group">
+                <label>Start Date:</label>
+                <input type="date" name="start_date" id="start_date" placeholder="YYYY-MM-DD">
+            </div>
+            <div class="input-group">
+                <label>End Date:</label>
+                <input type="date" name="end_date" id="end_date" placeholder="YYYY-MM-DD">
+            </div>
+        </div>
+        <label>Medical Report:</label><br>
+        <textarea name="report"></textarea><br><br>
+        <div class="button-container">
+            <input type="submit" value="Submit Report">
+        </div>
+    </form>
+    <a href="{{ url_for('logout') }}">Logout</a>
+</body>
+</html>
