@@ -80,3 +80,26 @@ def approve_report(report_id):
     flash('Report approved', 'success')
     return redirect(url_for('medical_officer_dashboard'))
 
+    @app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        user = User.query.filter_by(email=email).first()
+
+        if user and check_password_hash(user.password, password):
+            session['user_id'] = user.id
+            session['user_type'] = user.user_type
+            if user.user_type == 'student':
+                return redirect(url_for('student_dashboard'))
+            elif user.user_type == 'medical_officer':
+                return redirect(url_for('medical_officer_dashboard'))
+            else:
+                return redirect(url_for('admin_dashboard'))
+        else:
+            flash('Invalid email or password', 'error')
+
+    return render_template('login.html')
+
+
+
