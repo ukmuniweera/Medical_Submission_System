@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Medical Submission System</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='University-of-Vavuniya-Logo-1024x1024.png') }}" type="image/png">
+</head>
+<body>
+    <div class="logo-container">
+        <img src="{{ url_for('static', filename='cropped-UoV_Logo.png') }}" alt="University of Vavuniya Logo">
+    </div>
+    <h1 class="index-title">Medical Submission System</h1>
+    <div class="button-container">
+        <a href="{{ url_for('register') }}" class="a-button">Register</a>
+        <a href="{{ url_for('login') }}" class="a-button">Login</a>
+    </div>
+</body>
+</html>
