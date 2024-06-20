@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Officer Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='University-of-Vavuniya-Logo-1024x1024.png') }}" type="image/png">
+</head>
+<body>
+    <h2>Medical Officer Dashboard</h2>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="notification {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <table>
+        <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>Student Name</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Report</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for report in reports %}
+            <tr>
+                <td>{{ report.student_id }}</td>
+                <td>{{ report.student.username }}</td>
+                <td>{{ report.start_date }}</td>
+                <td>{{ report.end_date }}</td>
+                <td>{{ report.report }}</td>
+                <td>{{ report.status }}</td>
+                <td>
+                    {% if report.status == 'Pending' %}
+                    <a href="{{ url_for('approve_report', report_id=report.id) }}">Approve</a>
+                    {% else %}
+                    Approved
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ url_for('logout') }}">Logout</a>
+</body>
+</html>
