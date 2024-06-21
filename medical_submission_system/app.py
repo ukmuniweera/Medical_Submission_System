@@ -1,20 +1,3 @@
-@app.route('/student_dashboard', methods=['GET', 'POST'])
-def student_dashboard():
-    if 'user_id' not in session or session['user_type'] != 'student':
-        return redirect(url_for('login'))
-
-    if request.method == 'POST':
-        start_date = datetime.strptime(request.form['start_date'], '%Y-%m-%d').date()
-        end_date = datetime.strptime(request.form['end_date'], '%Y-%m-%d').date()
-        report = request.form['report']
-        new_report = MedicalReport(student_id=session['user_id'], start_date=start_date, end_date=end_date, report=report)
-        db.session.add(new_report)
-        db.session.commit()
-        flash('Medical report submitted', 'success')
-
-    return render_template('student_dashboard.html')
-                           
-
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -78,26 +61,7 @@ def register():
 
     return render_template('register.html')
 
-@app.route('/admin_dashboard')
-def admin_dashboard():
-    if 'user_id' not in session or session['user_type'] != 'administration':
-        return redirect(url_for('login'))
-
-    users = User.query.filter_by(user_type='student').all()
-    return render_template('admin_dashboard.html', users=users)
-
-@app.route('/approve_report/<int:report_id>')
-def approve_report(report_id):
-    if 'user_id' not in session or session['user_type'] != 'medical_officer':
-        return redirect(url_for('login'))
-
-    report = MedicalReport.query.get(report_id)
-    report.status = 'Approved'
-    db.session.commit()
-    flash('Report approved', 'success')
-    return redirect(url_for('medical_officer_dashboard'))
-
-    @app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         email = request.form['email']
@@ -117,6 +81,23 @@ def login():
             flash('Invalid email or password', 'error')
 
     return render_template('login.html')
+
+@app.route('/student_dashboard', methods=['GET', 'POST'])
+def student_dashboard():
+    if 'user_id' not in session or session['user_type'] != 'student':
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        start_date = datetime.strptime(request.form['start_date'], '%Y-%m-%d').date()
+        end_date = datetime.strptime(request.form['end_date'], '%Y-%m-%d').date()
+        report = request.form['report']
+        new_report = MedicalReport(student_id=session['user_id'], start_date=start_date, end_date=end_date, report=report)
+        db.session.add(new_report)
+        db.session.commit()
+        flash('Medical report submitted', 'success')
+
+    return render_template('student_dashboard.html')
+
 @app.route('/medical_officer_dashboard')
 def medical_officer_dashboard():
     if 'user_id' not in session or session['user_type'] != 'medical_officer':
@@ -124,6 +105,26 @@ def medical_officer_dashboard():
 
     reports = MedicalReport.query.all()
     return render_template('medical_officer_dashboard.html', reports=reports)
+
+@app.route('/admin_dashboard')
+def admin_dashboard():
+    if 'user_id' not in session or session['user_type'] != 'administration':
+        return redirect(url_for('login'))
+
+    users = User.query.filter_by(user_type='student').all()
+    return render_template('admin_dashboard.html', users=users)
+
+@app.route('/approve_report/<int:report_id>')
+def approve_report(report_id):
+    if 'user_id' not in session or session['user_type'] != 'medical_officer':
+        return redirect(url_for('login'))
+
+    report = MedicalReport.query.get(report_id)
+    report.status = 'Approved'
+    db.session.commit()
+    flash('Report approved', 'success')
+    return redirect(url_for('medical_officer_dashboard'))
+
 @app.route('/view_leaves/<int:student_id>')
 def view_leaves(student_id):
     if 'user_id' not in session or session['user_type'] != 'administration':
@@ -142,7 +143,3 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     app.run(debug=True)
-
-
-
-
