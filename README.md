@@ -6,9 +6,13 @@ The Medical Submission System is a web based application developed for the Unive
 ## Features
 
 - User Registration and Login
+
 - Student Dashboard
+  
 - Medical Officer Dashboard
+  
 - Administration Dashboard
+  
 ## Tech Stack
 
 **Backend:** Python, Flask, Flask-SQLAlchemy
